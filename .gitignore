@@ -1,0 +1,7 @@
+*.pyc
+.git/*
+.idea/*
+/videodb/__pycache__/*
+/videodatabase/migrations/*
+/media/video/*
+/media/raw/*

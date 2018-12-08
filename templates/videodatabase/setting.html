@@ -1,0 +1,372 @@
+{% extends 'videodatabase/common.html' %}
+
+{% block style %}
+    {% load staticfiles %}
+    <title>参数设置</title>
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-ui-1.9.2.custom.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/nouislider.min.js' %}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui-1.9.2.custom.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/nouislider.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/setting.css' %}">
+{% endblock style %}
+
+{% block contents %}
+    <!-- 标题 -->
+    <div class="container">
+        <div class="row"><h3>属性设置</h3></div>
+    </div>
+    <form action="{% url 'download' %}" method="post" onsubmit="return getSliderValue()">
+        {% csrf_token %}
+        <!-- 内容 -->
+        <div class="container">
+            <div class="content">
+                <!-- 第一行 -->
+                <div class="row">
+                    <div class="col-xs-3" style="height: 50px;">
+                        <tr>
+                            <td>视频时长</td>
+                            <td>
+                                <select name="video_length" id="">
+                                    <option value="15">15s</option>
+                                    <option value="30">30s</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </div>
+                    <div class="col-xs-9" style="height: 50px;">
+                        <tr>
+                            <td>视频尺寸</td>
+                            <td>
+                                <select name="video_size" id="">
+                                    <option value="1280*720">1280*720</option>
+                                    <option value="1280*720">1080*720</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </div>
+                </div>
+                <br>
+                <!-- 第二行 -->
+                <div class="row">
+                    <div class="col-xs-12" style="height: 160px;">
+                        内容线
+                        <div class="myslider">
+                            <!-- 滑块，id为doubleSlider -->
+                            <div class="slider" id="doubleSlider"></div>
+                            <!-- 隐藏的input，用来给滑块传参 -->
+                            <input type="hidden" id="context_slider" name="myslider">
+                            <!-- 滑块初始化 -->
+                            <script>
+                                var slider = document.getElementById('doubleSlider');
+
+                                noUiSlider.create(doubleSlider, {
+                                    animationDuration: 300,
+                                    start: [25, 75],
+                                    step: 5,
+                                    connect: [true, true, true],
+                                    range: {
+                                        'min': 0,
+                                        'max': 100
+                                    }
+                                });
+                            </script>
+                            <!-- 用于给滑块上添加数值 -->
+                            <script>
+                                updateSliderValue = function (slider, handle) {
+                                    var children, i, results, val, values;
+                                    if (handle == null) {
+                                        handle = 0;
+                                    }
+                                    children = slider.getElementsByClassName('noUi-handle');
+                                    values = slider.noUiSlider.get();
+                                    i = 0;
+                                    results = [];
+                                    while (i < children.length) {
+                                        if (children.length === 1) {
+                                            val = parseInt(values);
+                                        } else {
+                                            val = parseInt(values[i]);
+                                        }
+                                        children[i].dataset.value = val;
+                                        results.push(i++);
+                                    }
+                                    return results;
+                                };
+                                doubleSlider.noUiSlider.on('update', function () {
+                                    return updateSliderValue(doubleSlider);
+                                });
+                            </script>
+                            <!-- 滑块添加颜色 -->
+                            <script>
+                                var connect = doubleSlider.querySelectorAll('.noUi-connect');
+                                var classes = ['c-1-color', 'c-2-color', 'c-3-color'];
+                                for (var i = 0; i < connect.length; i++) {
+                                    connect[i].classList.add(classes[i]);
+                                }
+                            </script>
+
+                            <!-- submit时执行，给上面input中的myslider添加滑块参数 -->
+                            <script>
+                                function getSliderValue() {
+                                    var val = doubleSlider.noUiSlider.get();
+                                    document.getElementById("context_slider").value = val;
+                                }
+                            </script>
+                        </div>
+                        <div class="contentImg"><img src="{% static 'image/line.png' %}" alt=""></div>
+                    </div>
+                </div>
+                <br>
+                <!-- 第三行 -->
+                <div class="row">
+                    <!-- 画面变化 -->
+                    <div class="col-xs-4" style="height: 240px; border-right:20px solid #333232;">
+                        画面变化
+                        <ul>
+                            <li>
+                                主体运动变化
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-shen_2 btn-xs">
+                                        <input type="radio" name="speedArg_options" id="option1" autocomplete="off"
+                                               checked="" value="0"> 大
+                                    </label>
+
+                                    <label class="btn btn-shen_2 btn-xs active">
+                                        <input type="radio" name="speedArg_options" id="option3" autocomplete="off"
+                                               value="1"> 小
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                主体位置变化
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-shen_2 btn-xs">
+                                        <input type="radio" name="positionArg_options" id="option1" autocomplete="off"
+                                               value="0"> 大
+                                    </label>
+
+                                    <label class="btn btn-shen_2 btn-xs active">
+                                        <input type="radio" name="positionArg_options" id="option3" autocomplete="off"
+                                               checked="checked" value="1"> 小
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                镜头运动变化
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-shen_2 btn-xs">
+                                        <input type="radio" name="cramArg_options" id="option1" autocomplete="off"
+                                               value="0"> 大
+                                    </label>
+
+                                    <label class="btn btn-shen_2 btn-xs active">
+                                        <input type="radio" name="cramArg_options" id="option3" autocomplete="off"
+                                               checked="checked" value="1"> 小
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                画面色调变化
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-shen_2 btn-xs">
+                                        <input type="radio" name="colorArg_options" id="option1" autocomplete="off"
+                                               value="0"> 大
+                                    </label>
+
+                                    <label class="btn btn-shen_2 btn-xs active">
+                                        <input type="radio" name="colorArg_options" id="option3" autocomplete="off"
+                                               checked="checked" value="1"> 小
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                是否跳剪
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-shen_2 btn-xs">
+                                        <input type="radio" name="jumpArg_options" id="option1" autocomplete="off"
+                                               value="1"> 是
+                                    </label>
+
+                                    <label class="btn btn-shen_2 btn-xs active">
+                                        <input type="radio" name="jumpArg_options" id="option3" autocomplete="off"
+                                               checked="checked" value="0"> 否
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- 首镜头 -->
+                    <div class="col-xs-4" style="height: 240px; border-right:20px solid #333232;">
+                        首镜头
+                        <ul>
+                            <li>
+                                主体运动强度
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="start_speed_options" id="option1" autocomplete="off"
+                                               value="2"> 强
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="start_speed_options" id="option2" autocomplete="off"
+                                               value="1"> 中
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs active">
+                                        <input type="radio" name="start_speed_options" id="option3" autocomplete="off"
+                                               checked="checked" value="0"> 弱
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                镜头运动强度
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="start_craMotion_options" id="option1"
+                                               autocomplete="off"
+                                               value="2"> 强
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="start_craMotion_options" id="option2"
+                                               autocomplete="off"
+                                               value="1"> 中
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs active">
+                                        <input type="radio" name="start_craMotion_options" id="option3"
+                                               autocomplete="off"
+                                               checked="checked" value="0"> 弱
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                画面主体位置
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="start_position_options" id="option1"
+                                               autocomplete="off"
+                                               value="2"> 左
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="start_position_options" id="option2"
+                                               autocomplete="off"
+                                               value="1"> 中
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs active">
+                                        <input type="radio" name="start_position_options" id="option3"
+                                               autocomplete="off"
+                                               checked="checked" value="0"> 右
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                画面色调
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="start_color_options" id="option1" autocomplete="off"
+                                               value="0"> 暖
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="start_color_options" id="option2" autocomplete="off"
+                                               value="1"> 中
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs active">
+                                        <input type="radio" name="start_color_options" id="option3" autocomplete="off"
+                                               checked="checked" value="2"> 冷
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- 尾镜头 -->
+                    <div class="col-xs-4" style="height: 240px;">
+                        尾镜头
+                        <ul>
+                            <li>
+                                主体运动强度
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="end_speed_options" id="option1" autocomplete="off"
+                                               value="2"> 强
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="end_speed_options" id="option2" autocomplete="off"
+                                               value="1"> 中
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs active">
+                                        <input type="radio" name="end_speed_options" id="option3" autocomplete="off"
+                                               checked="checked" value="0"> 弱
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                镜头运动强度
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="end_craMotion_options" id="option1" autocomplete="off"
+                                               value="2"> 强
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="end_craMotion_options" id="option2" autocomplete="off"
+                                               value="1"> 中
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs active">
+                                        <input type="radio" name="end_craMotion_options" id="option3" autocomplete="off"
+                                               checked="checked" value="0"> 弱
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                画面主体位置
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="end_position_options" id="option1" autocomplete="off"
+                                               value="2"> 左
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="end_position_options" id="option2" autocomplete="off"
+                                               value="1"> 中
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs active">
+                                        <input type="radio" name="end_position_options" id="option3" autocomplete="off"
+                                               checked="checked" value="0"> 右
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                画面色调
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="end_color_options" id="option1" autocomplete="off"
+                                               value="0"> 暖
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs">
+                                        <input type="radio" name="end_color_options" id="option2" autocomplete="off"
+                                               value="1"> 中
+                                    </label>
+                                    <label class="btn btn-shen_3 btn-xs active">
+                                        <input type="radio" name="end_color_options" id="option3" autocomplete="off"
+                                               checked="checked" value="2"> 冷
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <!-- 底部按钮 -->
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-9">
+                    <a href="../autoEdit" class="btn btn-red">上一步</a>
+                </div>
+                <div class="col-xs-3">
+                    <input type="submit" class="btn btn-red" value="生成视频">
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock contents %}

@@ -1,0 +1,108 @@
+body, ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover {
+    color: rgb(138, 138, 141);
+}
+
+.col-md-12 .col-md-4 .aa.videodiv:hover {
+    opacity: 0.5;
+}
+
+.col-md-12 .col-md-4 .aa .videodiv {
+    position: relative;
+}
+
+.col-md-12 .row .col-md-4 .aa .textdivs {
+    position: absolute;
+    top: 110px;
+    left: 150px;
+    visibility: hidden;
+    color: white;
+    font-size: 20px;
+}
+
+.col-md-12 .row .col-md-4 .aas {
+    opacity: 0.0;
+    border: 0px solid red;
+}
+
+.col-md-12 .row .aat {
+    margin-top: 0px;
+    margin-left: 0px;
+    height: 200px;
+
+    position: relative;
+}
+
+.col-md-12 .row .aat:hover {
+    background-color: #242323;
+}
+
+.col-md-12 .row .aat .text_show {
+    top: 90px;
+    left: 125px;
+    position: absolute;
+    color: #B0B0B0;
+    font-size: 20px;
+    font-family: "Microsoft YaHei UI";
+}
+
+.pagination > li > a, .pagination > li > span {
+    background-color: #333232;
+    border: 0px solid #333333;
+    color: white;
+    font-family: "Microsoft YaHei UI";
+}
+
+.btn-red {
+    color: #F25C5C;
+    background-color: #231F1F;
+    border: 2px solid #F25C5C;
+    width: 200px;
+    height: 40px;
+    font-size: 18px;
+}
+
+.btn-red:hover,
+.btn-red:focus,
+.btn-red:active,
+.btn-red.active,
+.open .dropdown-toggle.btn-red {
+    color: #F25C5C;
+    background-color: #F25C5C;
+    border: 2px solid #F25C5C;
+    color: #fff;
+}
+
+.btn-red:active,
+.btn-red.active,
+.open .dropdown-toggle.btn-red {
+    background-image: none;
+}
+
+.btn-red.disabled,
+.btn-red[disabled],
+fieldset[disabled] .btn-red,
+.btn-red.disabled:hover,
+.btn-red[disabled]:hover,
+fieldset[disabled] .btn-red:hover,
+.btn-red.disabled:focus,
+.btn-red[disabled]:focus,
+fieldset[disabled] .btn-red:focus,
+.btn-red.disabled:active,
+.btn-red[disabled]:active,
+fieldset[disabled] .btn-red:active,
+.btn-red.disabled.active,
+.btn-red[disabled].active,
+fieldset[disabled] .btn-red.active {
+    background-color: #333232;
+    border-color: #F25C5C;
+}
+
+.btn-red .badge {
+    color: #333232;
+    background-color: #F25C5C;
+}

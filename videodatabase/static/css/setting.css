@@ -1,0 +1,279 @@
+/*标题样式*/
+.container .row h3 {
+    color: #fff;
+    padding-bottom: 5px;
+}
+
+/*栅格样式*/
+.content div[class*='col-xs'] {
+    border: 0px solid #000;
+    color: #BABABA;
+    font-size: 18px;
+    background-color: #3D3C3C;
+    padding-left: 8px;
+    padding-top: 10px;
+}
+
+/*下拉菜单样式*/
+.container select {
+    background-color: #585858;
+    width: 100px;
+    font-size: 14px;
+}
+
+.container input {
+    display: inline-block;
+}
+
+/*列表样式*/
+.container ul {
+    font-size: 14px;
+    list-style-type: none;
+    display: block;
+    height: 20px;
+    line-height: 40px;
+}
+
+/* 下面是滑动条的样式*/
+
+/*滑条的样式*/
+.noUi-target {
+    border: none;
+    margin-top: 20px;
+    margin-left: 40px;
+    width: 900px;
+}
+
+/*各分段的颜色*/
+.c-1-color {
+    background: #F36464;
+}
+
+.c-2-color {
+    background: #F66E0D;
+}
+
+.c-3-color {
+    background: #DDB120;
+}
+
+/*滑块样式*/
+.noUi-base .noUi-handle {
+    /*滑块背景色*/
+    background-color: #585858;
+    border: 1px solid #A9A9A9;
+    border-radius: 6px;
+    box-shadow: none;
+    display: table;
+    margin-left: -22px;
+    margin-top: -6px;
+    /*滑块中字体的样式*/
+    color: #fff;
+    font-size: 15px;
+    height: 30px;
+    width: 45px;
+    left: 0;
+    padding: 0;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    z-index: 2;
+}
+
+.noUi-horizontal .noUi-base .noUi-handle {
+    cursor: ew-resize;
+}
+
+.noUi-vertical .noUi-base .noUi-handle {
+    cursor: ns-resize;
+    margin-left: -32px;
+}
+
+/*鼠标放上去的样式*/
+.noUi-base .noUi-handle:hover {
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+.noUi-base .noUi-handle.noUi-active {
+    color: #fff;
+    border: 1px solid #fff;
+    z-index: 3;
+}
+
+/*下面两个用于显示按钮上的数值*/
+.noUi-base .noUi-handle::before {
+    background: transparent;
+    content: attr(data-value);
+    display: table-cell;
+    font-size: 18px;
+    font-weight: 100;
+    position: static;
+    width: 100%;
+    vertical-align: middle;
+}
+
+.noUi-base .noUi-handle::after {
+    display: none;
+}
+
+.contentImg {
+
+    margin-top: 15px;
+    margin-left: 40px;
+}
+
+/*按钮样式1*/
+
+.btn-shen_2 {
+    color: #BABABA;
+    background-color: #585858;
+    border-color: #3D3C3C;
+    width: 56px;
+}
+
+.btn-shen_2:hover,
+.btn-shen_2:focus,
+.btn-shen_2:active,
+.btn-shen_2.active,
+.open .dropdown-toggle.btn-shen_2 {
+    color: #fff;
+    background-color: #585858;
+    border-color: #FFFFFF;
+}
+
+.btn-shen_2:active,
+.btn-shen_2.active,
+.open .dropdown-toggle.btn-shen_2 {
+    background-image: none;
+}
+
+.btn-shen_2.disabled,
+.btn-shen_2[disabled],
+fieldset[disabled] .btn-shen_2,
+.btn-shen_2.disabled:hover,
+.btn-shen_2[disabled]:hover,
+fieldset[disabled] .btn-shen_2:hover,
+.btn-shen_2.disabled:focus,
+.btn-shen_2[disabled]:focus,
+fieldset[disabled] .btn-shen_2:focus,
+.btn-shen_2.disabled:active,
+.btn-shen_2[disabled]:active,
+fieldset[disabled] .btn-shen_2:active,
+.btn-shen_2.disabled.active,
+.btn-shen_2[disabled].active,
+fieldset[disabled] .btn-shen_2.active {
+    background-color: #585858;
+    border-color: #FFFFFF;
+}
+
+.btn-shen_2 .badge {
+    color: #585858;
+    background-color: #BABABA;
+}
+
+/*按钮样式2*/
+
+.btn-shen_3 {
+    color: #BABABA;
+    background-color: #585858;
+    border-color: #3D3C3C;
+    width: 45px;
+}
+
+.btn-shen_3:hover,
+.btn-shen_3:focus,
+.btn-shen_3:active,
+.btn-shen_3.active,
+.open .dropdown-toggle.btn-shen_3 {
+    color: #fff;
+    background-color: #585858;
+    border-color: #FFFFFF;
+}
+
+.btn-shen_3:active,
+.btn-shen_3.active,
+.open .dropdown-toggle.btn-shen_3 {
+    background-image: none;
+}
+
+.btn-shen_3.disabled,
+.btn-shen_3[disabled],
+fieldset[disabled] .btn-shen_3,
+.btn-shen_3.disabled:hover,
+.btn-shen_3[disabled]:hover,
+fieldset[disabled] .btn-shen_3:hover,
+.btn-shen_3.disabled:focus,
+.btn-shen_3[disabled]:focus,
+fieldset[disabled] .btn-shen_3:focus,
+.btn-shen_3.disabled:active,
+.btn-shen_3[disabled]:active,
+fieldset[disabled] .btn-shen_3:active,
+.btn-shen_3.disabled.active,
+.btn-shen_3[disabled].active,
+fieldset[disabled] .btn-shen_3.active {
+    background-color: #585858;
+    border-color: #FFFFFF;
+}
+
+.btn-shen_3 .badge {
+    color: #585858;
+    background-color: #BABABA;
+}
+
+/*按钮样式3*/
+
+.btn-red {
+    color: #F25C5C;
+    background-color: #333232;
+    border: 2px solid #F25C5C;
+    width: 200px;
+    height: 40px;
+    font-size: 18px;
+}
+
+.btn-red:hover,
+.btn-red:focus,
+.btn-red:active,
+.btn-red.active,
+.open .dropdown-toggle.btn-red {
+    color: #F25C5C;
+    background-color: #F25C5C;
+    border: 2px solid #F25C5C;
+    color: #fff;
+}
+
+.btn-red:active,
+.btn-red.active,
+.open .dropdown-toggle.btn-red {
+    background-image: none;
+}
+
+.btn-red.disabled,
+.btn-red[disabled],
+fieldset[disabled] .btn-red,
+.btn-red.disabled:hover,
+.btn-red[disabled]:hover,
+fieldset[disabled] .btn-red:hover,
+.btn-red.disabled:focus,
+.btn-red[disabled]:focus,
+fieldset[disabled] .btn-red:focus,
+.btn-red.disabled:active,
+.btn-red[disabled]:active,
+fieldset[disabled] .btn-red:active,
+.btn-red.disabled.active,
+.btn-red[disabled].active,
+fieldset[disabled] .btn-red.active {
+    background-color: #333232;
+    border-color: #F25C5C;
+}
+
+.btn-red .badge {
+    color: #333232;
+    background-color: #F25C5C;
+}
+
+/*脚注样式*/
+.footnote {
+    color: #6B6B6B;
+}

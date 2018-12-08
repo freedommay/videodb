@@ -1,0 +1,68 @@
+.btn-red {
+    color: #F25C5C;
+    background-color: #231F1F;
+    border: 2px solid #F25C5C;
+    width: 200px;
+    height: 40px;
+    font-size: 18px;
+}
+
+.btn-red:hover,
+.btn-red:focus,
+.btn-red:active,
+.btn-red.active,
+.open .dropdown-toggle.btn-red {
+    color: #F25C5C;
+    background-color: #F25C5C;
+    border: 2px solid #F25C5C;
+    color: #fff;
+}
+
+.btn-red:active,
+.btn-red.active,
+.open .dropdown-toggle.btn-red {
+    background-image: none;
+}
+
+.btn-red.disabled,
+.btn-red[disabled],
+fieldset[disabled] .btn-red,
+.btn-red.disabled:hover,
+.btn-red[disabled]:hover,
+fieldset[disabled] .btn-red:hover,
+.btn-red.disabled:focus,
+.btn-red[disabled]:focus,
+fieldset[disabled] .btn-red:focus,
+.btn-red.disabled:active,
+.btn-red[disabled]:active,
+fieldset[disabled] .btn-red:active,
+.btn-red.disabled.active,
+.btn-red[disabled].active,
+fieldset[disabled] .btn-red.active {
+    background-color: #333232;
+    border-color: #F25C5C;
+}
+
+.btn-red .badge {
+    color: #333232;
+    background-color: #F25C5C;
+}
+
+.i1 {
+    text-align: center;
+    color: #0c040a;
+    background-color: #9933cc;
+    font-size: larger;
+    width: 100px;
+    height: 50px;
+}
+
+
+
+
+
+
+
+
+
+

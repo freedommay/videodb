@@ -1,0 +1,134 @@
+#screen div {
+    background-color: #504f4f;
+    border: 0px solid red;
+}
+
+.text-center {
+    text-align: center;
+    color: white;
+}
+
+#screenshots {
+    z-index: -9999;
+}
+
+.input-group {
+    padding-top: 10px;
+    opacity: 0.8;
+}
+
+.input-group .form-control {
+    background-color: #504f4f;
+    border: 1px;
+    width: 100%;
+    color: white;
+}
+
+.mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, .3);
+    /*background:hsla(0,100%,80%,0.5)*/
+    /*background:#000;  */
+    opacity: 0.5;
+}
+
+.input-group .btn {
+    background-color: #504f4f;
+    border: 1px solid #504f4f;
+}
+
+.col-md-12 .col-md-4 .aa .videodiv {
+    position: relative;
+}
+
+.col-md-12 .col-md-4 .aa .videodiv .content {
+    padding-top: 30px;
+    padding-left: 0px;
+    width: 310px;
+    height: 250px;
+    object-fit: fill;
+    padding-right: 0px;
+    margin-right: 100px;
+}
+
+.col-md-12 .row .col-md-4 .aa .textdivs {
+    position: absolute;
+    top: 120px;
+    left: 165px;
+    visibility: hidden;
+    color: white;
+    font-size: 20px;
+}
+
+.col-md-12 .row .col-md-4 .aas {
+    opacity: 0.0;
+    width: 0px;
+    height: 200px;
+}
+
+.col-md-12 .row .aat {
+    margin-top: 30px;
+    margin-left: 15px;
+    height: 220px;
+    object-fit: fill;
+    position: relative;
+    width: 310px;
+
+    margin-right: 5px;
+}
+
+.col-md-12 .row .aat:hover {
+    background-color: #242323;
+}
+
+.col-md-12 .row .aat .text_show {
+    top: 90px;
+    left: 115px;
+    position: absolute;
+    color: #B0B0B0;
+    font-size: 20px;
+    font-family: "Microsoft YaHei UI";
+}
+
+.pagination > li > a, .pagination > li > span {
+    background-color: #333232;
+    border: 0px solid #333333;
+    color: white;
+    font-family: "Microsoft YaHei UI";
+
+}
+
+.input-group .container .title_video {
+    color: #858484;
+    padding-left: 18px;
+    padding-top: 10px;
+}
+
+.input-group .container .title_business {
+    color: #858484;
+    padding-left: 18px;
+    padding-top: 20px;
+}
+
+.input-group .container .title_product {
+    color: #858484;
+    padding-left: 18px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+.pagination > li > a, .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    margin-left: -1px;
+    line-height: 1.42857143;
+    color: #337ab7;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}

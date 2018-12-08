@@ -1,0 +1,131 @@
+{% extends 'videodatabase/common.html' %}
+
+{% block style %}
+    {% load staticfiles %}
+    <title>参数设置</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery-ui-1.9.2.custom.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery-ui-1.9.2.custom.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/upload.css' %}">
+    <script>
+        $(document).ready(function () {
+            $('input[type="file"]').change(function () {
+                $('input').removeAttr('disabled');
+            })
+        })
+    </script>
+{% endblock style %}
+
+{% block contents %}
+    <br>
+    <!-- 返回图标 -->
+    <h3 class="back">
+        <a href="../home" class="glyphicon glyphicon-arrow-left" style="color: #CCCCCC; margin-left: 200px;"></a>
+    </h3>
+    <br><br>
+    <!-- 表单提交部分 -->
+    <form action="{% url 'analysis' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- 选择文件 -->
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-2">
+                    <p class="uploadFont">上传视频</p>
+                </div>
+                <div class="col-xs-10">
+                    <div class="form-group">
+                        <!-- 真正的文件上传表单 -->
+                        <input name="video" type="file" id="thisfile" style="display: none"/>
+                    </div>
+                    <div class="input-append">
+                        <!-- 用于展示上传文件名的表单 -->
+                        <input id="showname" class="input-large" type="text">
+                        <!-- 点击触发按钮 -->
+                        <a class="btn btn-default" onclick="makeThisfile()" id="browse">浏览</a>
+                    </div>
+                    <script type="text/javascript">
+                        //触发隐藏的file表单
+                        function makeThisfile() {
+                            $('#thisfile').click();
+                        }
+
+                        //file表单选中文件时,让file表单的val展示到showname这个展示框
+                        $('#thisfile').change(function () {
+                            $('#showname').val($(this).val().replace("C:\\fakepath\\", ""))
+                        })
+                    </script>
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <!-- 选择参数 -->
+        <div class="container">
+            <div class="selections">
+
+                <!-- 第一行 -->
+                <div class="row">
+                    <div class="col-xs-3">
+                        <h4 class="title">视频载体</h4>
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="form-group">
+                            <select class="form-control" id="exampleFormControlSelect1" name="select1">
+                                <option value="1">手机</option>
+                                <option value="2">电视</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <!-- 第二行 -->
+                <div class="row">
+                    <div class="col-xs-3">
+                        <h4 class="title">业务场景</h4>
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="form-group">
+                            <select class="form-control" id="exampleFormControlSelect1" name="select2">
+                                <option value="1">商品上新</option>
+                                <option value="2">促销</option>
+                                <option value="3">品牌宣传</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <!-- 第三行 -->
+                <div class="row">
+                    <div class="col-xs-3">
+                        <h4 class="title">产品品类</h4>
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="form-group">
+
+                            <select class="form-control" id="exampleFormControlSelect1" name="select3">
+                                <option value="1">男装</option>
+                                <option value="2">女装</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <!-- 底部按钮 -->
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-4">
+                </div>
+                <div class="col-xs-8">
+                    <input type="submit" class="btn btn-red" disabled="disabled" value="分析视频">
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock contents %}

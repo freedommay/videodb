@@ -1,0 +1,100 @@
+{% extends 'videodatabase/common.html' %}
+
+{% block style %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/autoedit.css' %}">
+    <script type="text/javascript" src="{% static 'js/autoedit.js' %}"></script>
+    <script>
+        function to_setting() {
+            window.location.href = '{% url 'setting' %}';
+        }
+
+        $.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});
+        $("#document").ready(function () {
+            $("#upload_clip").change(function () {
+                var form_data = new FormData();
+                var file_info = $("#upload_clip")[0].files[0];
+                form_data.append('file', file_info);
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'save_clip' %}",
+                    cache: false,
+                    data: form_data,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        window.location.reload();
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+{% endblock style %}
+
+{% block contents %}
+    <script>
+        document.getElementById('second').style.color = "red";
+    </script>
+    <div class="container">
+        <div class="col-lg-3 col-xs-3"></div>
+        <div class="col-lg-3"></div>
+        <div class="container">
+            <h3 class="text-left" style="color:white">​上传你的素材</h3>
+        </div>
+        <div class="container" style="padding-top: 30px;">
+        </div>
+        <div class="col-md-12 ">
+            <div class="row">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="ssn">
+                        <div class="aat col-md-4 col-sm-2 col-xs-2 ">
+                            <input type="file" class="aas" id="upload_clip" style="width: 300px;height: 210px;">
+                            <div class="text_show">添加素材</div>
+                        </div>
+                    </div>
+                </form>
+                {% for clip in clips %}
+                    <div class="col-md-4 col-sm-4 col-xs-4">
+                        <a class="aa" href="{% url 'delete' clip.id %}" onmouseout='closename("{{ clip.id }}")'
+                           onmouseover='showname("{{ clip.id }}")'>
+                            <div class="videodiv" style="position: relative;">
+                                <video class="content" id='{{ clip.id }}' width="300" height="200"
+                                       style="padding-top:30px; ">
+                                    <source id="clipss" src="{{ clip.url.url }}" type="video/mp4">
+                                </video>
+                            </div>
+
+                            <div class="textdivs" name='{{ clip.id }}'>
+                                删除
+                            </div>
+                        </a>
+                        <div class="row">
+                            <div class="col-md-6 span7 text-center">
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="container">
+        <div class="row col-lg-12 col-md-12 col-xs-12 col-sm-12">
+            <div class="col-lg-9 col-md-9 col-xs-9 col-sm-9 center">
+            </div>
+            <div class="col-lg-3 col-md-3 col-xs-3 col-sm-3 center">
+                <input type="button" class="btn-red" value="下一步" onClick="to_setting()">
+            </div>
+        </div>
+
+    </div>
+{% endblock contents %}
+
+

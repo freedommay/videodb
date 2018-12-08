@@ -1,0 +1,164 @@
+{% extends 'videodatabase/common.html' %}
+{% block style %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}" media="all">
+    <script type="text/javascript" src="{% static 'js/home.js' %}"></script>
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% endblock style %}
+{% block contents %}
+    <div class="container">
+        <h1 id="title" class="text-center">广告短视频数据库</h1>
+    </div>
+    <div class="container">
+        <h4 class="text-center" style="color: #E75A5A">[ COMMRERCIAL FILM ]</h4>
+    </div>
+    <div class="container">
+        <div col-lg-12></div>
+        <div class="col-lg-3 col-xs-3"></div>
+        <form action="{% url 'search' %}">
+            <div class="input-group col-lg-6 col-md-6 col-sm-6">
+                <input type="text" name="video" class="form-control" placeholder="请输入要查询的视频类型"/>
+                <span class="input-group-btn">
+               <button type="submit" class="btn btn-info btn-search"><span
+                       class="glyphicon glyphicon-search"></span></button>
+       </span>
+            </div>
+        </form>
+        <div class="container" style="height: 20px;"></div>
+        <div class="col-lg-3 col-xs-3"></div>
+        <div class="col-lg-3"></div>
+        <div class="input-group" id="screen">
+            {% load static %}
+            <div class="container ">
+                <h4 class="title_video" id="title">视频载体：
+                    <a href="{% url 'home' %}"> <span
+                            style="padding-left:35px; color: #f25c5c;">全部 <span
+                            style="font-size: 16px; color: #9B9B9B;">( {{ total_amount }} )</span></span>
+                    </a>
+                    <a href="{% url 'search_container' 1 %}">
+                    <span style="padding-left:35px; color: #9B9B9B;">手机 <span
+                            style="font-size: 16px; color: #9B9B9B;">( {{ mobile_amount }} )</span></span>
+                    </a>
+                    <a href="{% url 'search_container' 2 %}">
+                    <span style="padding-left:35px; color: #9B9B9B;">电视 <span
+                            style="font-size: 16px; color: #9B9B9B;">( {{ television_amount }} )</span></span>
+                    </a>
+                </h4>
+            </div>
+
+            <div class="container">
+                <h4 class="title_business">业务场景：
+                    <a href="{% url 'home' %}">
+                    <span style="padding-left:35px; color: #f25c5c;">全部 <span
+                            style="font-size: 16px; color: #9B9B9B;">( {{ total_amount }} )</span></span></a>
+                    <a href="{% url 'search_scenes' 1 %}">
+                    <span style="padding-left:35px; color: #9B9B9B;">商品上新 <span
+                            style="font-size: 16px; color: #9B9B9B;">( {{ new_amount }} )</span></span></a>
+                    <a href="{% url 'search_scenes' 2 %}">
+                    <span style="padding-left:35px; color: #9B9B9B;">促销 <span
+                            style="font-size: 16px; color: #9B9B9B;">( {{ promotion_amount }} )</span></span>
+                    </a>
+                    <a href="{% url 'search_scenes' 3 %}">
+                    <span style="padding-left:35px; color: #9B9B9B;">品牌宣传 <span
+                            style="font-size: 16px; color: #9B9B9B;">( {{ advertisement_amount }} )</span></span></a>
+                </h4>
+            </div>
+
+            <div class="container">
+                <h4 class="title_product">
+                    产品品类：
+                    <a href="{% url 'home' %}">
+                    <span style="padding-left:35px; color: #f25c5c;">全部 <span
+                            style="font-size: 16px; color: #9B9B9B;">( {{ total_amount }} )</span></span> </a>
+                    <a href="{% url 'search_category' 1 %}">
+                <span style="padding-left:35px; color: #9B9B9B;">男装 <span
+                        style="font-size: 16px; color:#9B9B9B;">( {{ men_clothing_amount }} )</span></span></a>
+                    <a href="{% url 'search_category' 2 %}">
+                    <span style="padding-left:35px; color: #9B9B9B;">女装 <span
+                            style="font-size: 16px; color: #9B9B9B;">( {{ women_clothing_amount }} )</span></span></a>
+                </h4>
+            </div>
+        </div>
+
+        <div class="container" style="padding-top: 30px;">
+        </div>
+        <div class="col-md-12">
+            <div class="row">
+                <form method="post" enctype="multipart/form-data">
+                    <a href="{% url 'upload' %}">
+                        <div class="ssn">
+                            <div class="aat col-md-4 col-sm-2 col-xs-2 ">
+                                <input type="file" class="aas" id="dead">
+                                <div class="text_show">添加视频</div>
+                            </div>
+                        </div>
+                    </a>
+                </form>
+                {% for video in videos %}
+                    <div class="col-md-4 col-sm-4 col-xs-4">
+                        <a class="aa" href="{% url 'detail' video.id %}" onmouseout='closename("{{ video.id }}")'
+                           onmouseover='showname("{{ video.id }}")'>
+                            <div class="videodiv" style="position: relative;">
+                                <video class="content" id='{{ video.id }}'>
+                                    <source id="videoss" src="{{ video.url.url }}" type="video/mp4">
+                                </video>
+                            </div>
+                            <div class="textdivs" name='{{ video.id }}'>
+                                {{ video.name }}
+                            </div>
+
+                        </a>
+                        <div class="row">
+                            <div class="col-md-6 span7 text-center">
+
+                            </div>
+                            <div class="col-md-6">
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <br>
+            <div class="container text-center">
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item">
+                            {% if videos.has_previous %}
+                                <a class="page-link" style="background-color: #333232;color: #808080" href="?page=1">&laquo;
+                                    首页</a>
+                            {% endif %}
+                        </li>
+                        <li class="page-item">
+                            {% if videos.has_previous %}
+                                <a class="page-link" style="background-color: #333232;color: #808080"
+                                   href="?page={{ videos.previous_page_number }}">上一页</a>
+                            {% endif %}
+                        </li>
+                        <li class="page-item">
+                            {% if videos.has_previous or videos.has_next %}
+                                <a class="page-link" style="background-color: #333232;color: #808080"
+                                   href="#"> {{ videos.number }}</a>
+                            {% endif %}
+                        </li>
+                        <li class="page-item">
+                            {% if videos.has_next %}
+                                <a class="page-link" style="background-color:  #333232;color: #808080"
+                                   href="?page={{ videos.next_page_number }}">下一页</a>
+                            {% endif %}
+                        </li>
+                        <li class="page-item">
+                            {% if videos.has_next %}
+                                <a class="btn btn-sample page-link" style="background-color: #333232;color: #808080"
+                                   href="?page={{ videos.paginator.num_pages }}">尾页</a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+{% endblock contents %}

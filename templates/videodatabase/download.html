@@ -1,0 +1,47 @@
+{% extends 'videodatabase/common.html' %}
+
+{% block style %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/download.css' %}">
+    <script>
+        function back() {
+            window.location.href = '{% url 'setting' %}';
+        }
+
+        function download() {
+            window.location.href = '{% url 'download_video' %}';
+        }
+    </script>
+{% endblock style %}
+
+{% block contents %}
+    <div class="container">
+        <h1>&nbsp</h1>
+    </div>
+
+    <div class="container" style="text-align: center;">
+        <video id="i1" width="573" height="320" controls autoplay>
+            {% load staticfiles %}
+            <source src="/media/generate/{{ video }}" type="video/mp4">
+        </video>
+    </div>
+
+    <div class="container">
+        <h6>&nbsp</h6>
+    </div>
+
+    <div class="container" style="text-align: center; ">
+        <div class="row">
+            <div class="col-xs-6" style="padding-left:150px;">
+                <input type="button" class="btn-red" value="上一步" onClick="back()">
+            </div>
+            <div class="col-xs-6" style="padding-right:150px;">
+                <input type="button" class="btn-red" value="下载视频" onClick="download()">
+            </div>
+        </div>
+    </div>
+{% endblock contents %}

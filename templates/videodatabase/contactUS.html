@@ -1,0 +1,65 @@
+{% extends 'videodatabase/common.html' %}
+
+{% block style %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+{% endblock style %}
+
+
+{% block contents %}
+    <script>
+        document.getElementById('fouth').style.color = "red";
+    </script>
+
+    <div class="container">
+        <h1>&nbsp</h1>
+    </div>
+
+    <div class="container">
+        <h5 class="text-center" style=" font-size: 80px;color: white">联系我们</h5>
+    </div>
+
+    <div class="container">
+        <h2>&nbsp</h2>
+    </div>
+
+    <div class="container" style="padding-left:110px;">
+        <div class="row  col-lg-12 col-md-12 col-xs-12 col-sm-12" style="text-align: center;">
+            <div class="col-lg-3 col-md-3 col-xs-3 col-sm-3 center">
+                <h2 class="text-center" style="color: white">管理员</h2>
+                <h5 class="text-center" style="color: white">Email: info@mysite.com</h5>
+                <h5 class="text-center" style="color: white">Tel: 123-456-7890</h5>
+            </div>
+
+            <div class="col-lg-1 col-md-1 col-xs-1 col-sm-1 center">
+                <img src="{% static 'image/bar.png' %}" alt="">
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-xs-3 col-sm-3 center">
+                <h2 class="text-center" style="color: white">IDEA LAB</h2>
+                <h5 class="text-center" style="color: white">Email: info@mysite.com</h5>
+                <h5 class="text-center" style="color: white">Tel: 123-456-7890</h5>
+            </div>
+
+            <div class="col-lg-1 col-md-1 col-xs-1 col-sm-1 center">
+                <img src="{% static 'image/bar.png' %}" alt="">
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-xs-3 col-sm-3 center">
+                <h2 class="text-center" style="color: white">AZFT</h2>
+                <h5 class="text-center" style="color: white">Email: info@mysite.com</h5>
+                <h5 class="text-center" style="color: white">Tel: 123-456-7890</h5>
+            </div>
+        </div>
+    </div>
+{% endblock contents %}
+
+
+
+
+
+
+
+

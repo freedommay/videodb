@@ -1,0 +1,53 @@
+/*背景颜色*/
+body {
+    font-family: "Microsoft Yahei";
+    background-color: #333232;
+}
+
+/*整个容器*/
+.container {
+    padding-right: 5px;
+    padding-left: 5px;
+    margin-right: auto;
+    margin-left: auto;
+    width: 1000px;
+}
+
+.navbar-brand {
+    float: left;
+    height: 50px;
+    padding: 3px 100px;
+    font-size: 18px;
+    line-height: 20px;
+}
+
+.navbar-inverse {
+    background-color: #fff;
+    border-color: #504f4f;
+    border-bottom-width: 5px;
+    padding-top: 20px;
+    height: 70px;
+}
+
+.navbar-inverse .navbar-nav > li > a {
+    color: #000;
+    margin-right: 60px;
+    padding-right: 5px;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover {
+    color: blue;
+}
+
+.navbar-inverse .navbar-toggle {
+    border-color: #333;
+}
+
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+    border-color: #fff;
+}
+
+/*脚注样式*/
+.footnote {
+    color: #6B6B6B;
+}

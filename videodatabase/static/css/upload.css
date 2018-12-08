@@ -1,0 +1,117 @@
+/*标题样式*/
+.container .row h4 {
+    color: #BABABA;
+    padding-bottom: 5px;
+}
+
+/*栅格样式*/
+.selections div[class*='col-xs'] {
+    border: 0px solid #000;
+    color: #BABABA;
+    background-color: #3D3C3C;
+    padding-left: 30px;
+    padding-top: 8px;
+}
+
+/*上传视频文字的样式*/
+.uploadFont {
+    color: #CCCCCC;
+    font-size: 18px;
+    margin-top: 16px;
+}
+
+/*上传视频框的样式*/
+.input-append .input-large {
+    height: 25px;
+    width: 350px;
+    background-color: #585858;
+    border: 1px solid #CCCCCC;
+    font-size: 14px;
+    color: #CCCCCC;
+    margin-left: -70px;
+    margin-top: 3px;
+}
+
+/*上传视频按钮样式*/
+.btn-default {
+    text-align: center;
+    width: 60px;
+    height: 28px;
+    line-height: 14px;
+    margin-bottom: 3px;
+}
+
+/*选项样式*/
+.selections .title {
+    font-size: 22px;
+    padding-left: 100px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/*下拉菜单样式*/
+.container .form-group {
+    width: 500px;
+    margin-top: 10px;
+}
+
+/*下拉菜单文字样式*/
+.container select {
+    background-color: #585858;
+    width: 350px;
+    font-size: 14px;
+    color: #CCCCCC;
+    text-align: center;
+}
+
+/*按钮样式3*/
+
+.btn-red {
+    color: #F25C5C;
+    background-color: #333232;
+    border: 2px solid #F25C5C;
+    width: 200px;
+    height: 40px;
+    font-size: 18px;
+}
+
+.btn-red:hover,
+.btn-red:focus,
+.btn-red:active,
+.btn-red.active,
+.open .dropdown-toggle.btn-red {
+    color: #F25C5C;
+    background-color: #F25C5C;
+    border: 2px solid #F25C5C;
+    color: #fff;
+}
+
+.btn-red:active,
+.btn-red.active,
+.open .dropdown-toggle.btn-red {
+    background-image: none;
+}
+
+.btn-red.disabled,
+.btn-red[disabled],
+fieldset[disabled] .btn-red,
+.btn-red.disabled:hover,
+.btn-red[disabled]:hover,
+fieldset[disabled] .btn-red:hover,
+.btn-red.disabled:focus,
+.btn-red[disabled]:focus,
+fieldset[disabled] .btn-red:focus,
+.btn-red.disabled:active,
+.btn-red[disabled]:active,
+fieldset[disabled] .btn-red:active,
+.btn-red.disabled.active,
+.btn-red[disabled].active,
+fieldset[disabled] .btn-red.active {
+    background-color: #333232;
+    border-color: #F25C5C;
+}
+
+.btn-red .badge {
+    color: #333232;
+    background-color: #F25C5C;
+}

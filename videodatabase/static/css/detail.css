@@ -1,0 +1,108 @@
+/*列表样式*/
+.detailss ul {
+    margin-top: 15px;
+    font-size: 14px;
+    list-style-type: none;
+    display: block;
+    height: 20px;
+    line-height: 50px;
+    color: #FFF;
+}
+
+/*透明的标签样式*/
+ul li .jelly {
+    display: inline-block;
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+    width: 80px;
+    height: 20px;
+    margin-left: -30px;
+    margin-right: 20px;
+}
+
+/*字符参数的样式*/
+.fonts {
+    color: #BABABA;
+}
+
+/*按钮参数样式*/
+.label-group .off {
+    display: inline-block;
+    color: #BABABA;
+    background-color: #585858;
+    border: 0px solid #3D3C3C;
+    font-size: 12px;
+    font-weight: normal;
+    text-align: center;
+    line-height: 13px;
+    width: 56px;
+    height: 20px;
+}
+
+.label-group .on {
+    display: inline-block;
+    color: #fff;
+    background-color: #585858;
+    border: 1px solid #fff;
+    font-size: 12px;
+    font-weight: normal;
+    text-align: center;
+    line-height: 13px;
+    width: 56px;
+    height: 20px;
+}
+
+.table > caption + thead > tr:first-child > td, .table > caption + thead > tr:first-child > th, .table > colgroup + thead > tr:first-child > td, .table > colgroup + thead > tr:first-child > th, .table > thead:first-child > tr:first-child > td, .table > thead:first-child > tr:first-child > th {
+    border-top: 0;
+    border-bottom: 0;
+}
+
+#table_s {
+    padding-left: 0px;
+    padding-right: 0px;
+    border: 2px solid white;
+    width: 509px;
+}
+
+#table_s .table tr {
+    height: 50px;
+}
+
+#table_s .table tr {
+    height: 50px;
+}
+
+#table_s .table tr th {
+    padding-left: 50px;
+    border-right: 0.1px solid #6B6B6B;
+    vertical-align: middle;
+}
+
+#table_s .table tr td {
+    border-right: 0.1px solid #6B6B6B;
+    text-align: center;
+    vertical-align: middle;
+    color: #9B9B9B;
+
+}
+
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #6B6B6B;
+}
+
+.container .row .col-md-6 .table {
+    padding-left: 0px;
+    width: 505px;
+    font-size: 16px;
+    border: 0px;
+    margin-bottom: 0px;
+    object-fit: fill
+}
+
