@@ -74,8 +74,9 @@
                     <div class="col-xs-9">
                         <div class="form-group">
                             <select class="form-control" id="exampleFormControlSelect1" name="select1">
-                                <option value="1">手机</option>
-                                <option value="2">电视</option>
+                                {% for c in container %}
+                                    <option value={{ c.id }}>{{ c.name }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -89,9 +90,9 @@
                     <div class="col-xs-9">
                         <div class="form-group">
                             <select class="form-control" id="exampleFormControlSelect1" name="select2">
-                                <option value="1">商品上新</option>
-                                <option value="2">促销</option>
-                                <option value="3">品牌宣传</option>
+                                {% for s in scenes %}
+                                    <option value={{ s.id }}>{{ s.name }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -106,8 +107,9 @@
                         <div class="form-group">
 
                             <select class="form-control" id="exampleFormControlSelect1" name="select3">
-                                <option value="1">男装</option>
-                                <option value="2">女装</option>
+                                {% for p in product_category %}
+                                    <option value={{ p.id }}>{{ p.name }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>

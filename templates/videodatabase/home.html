@@ -7,6 +7,11 @@
     <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        function add() {
+            window.location.href = '{% url 'add_container' %}';
+        }
+    </script>
 {% endblock style %}
 {% block contents %}
     <div class="container">
@@ -38,14 +43,14 @@
                             style="padding-left:35px; color: #f25c5c;">全部 <span
                             style="font-size: 16px; color: #9B9B9B;">( {{ total_amount }} )</span></span>
                     </a>
-                    <a href="{% url 'search_container' 1 %}">
-                    <span style="padding-left:35px; color: #9B9B9B;">手机 <span
-                            style="font-size: 16px; color: #9B9B9B;">( {{ mobile_amount }} )</span></span>
-                    </a>
-                    <a href="{% url 'search_container' 2 %}">
-                    <span style="padding-left:35px; color: #9B9B9B;">电视 <span
-                            style="font-size: 16px; color: #9B9B9B;">( {{ television_amount }} )</span></span>
-                    </a>
+                    {% for c in container %}
+                        <a href="{% url 'search_container' c.id %}">
+                        <span style="padding-left:35px; color: #9B9B9B;">{{ c.name }}<span
+                                style="font-size: 16px; color: #9B9B9B;">( {{ c.editedvideo_set.count }} )</span></span></a>
+                    {% endfor %}
+                    <button class="btn btn-default" style="margin-left: 30px" data-toggle="modal"
+                            data-target="#addModal1">添加
+                    </button>
                 </h4>
             </div>
 
@@ -54,16 +59,14 @@
                     <a href="{% url 'home' %}">
                     <span style="padding-left:35px; color: #f25c5c;">全部 <span
                             style="font-size: 16px; color: #9B9B9B;">( {{ total_amount }} )</span></span></a>
-                    <a href="{% url 'search_scenes' 1 %}">
-                    <span style="padding-left:35px; color: #9B9B9B;">商品上新 <span
-                            style="font-size: 16px; color: #9B9B9B;">( {{ new_amount }} )</span></span></a>
-                    <a href="{% url 'search_scenes' 2 %}">
-                    <span style="padding-left:35px; color: #9B9B9B;">促销 <span
-                            style="font-size: 16px; color: #9B9B9B;">( {{ promotion_amount }} )</span></span>
-                    </a>
-                    <a href="{% url 'search_scenes' 3 %}">
-                    <span style="padding-left:35px; color: #9B9B9B;">品牌宣传 <span
-                            style="font-size: 16px; color: #9B9B9B;">( {{ advertisement_amount }} )</span></span></a>
+                    {% for s in scenes %}
+                        <a href="{% url 'search_scenes' s.id %}">
+                        <span style="padding-left:35px; color: #9B9B9B;">{{ s.name }}<span
+                                style="font-size: 16px; color: #9B9B9B;">( {{ s.editedvideo_set.count }} )</span></span></a>
+                    {% endfor %}
+                    <button class="btn btn-default" style="margin-left: 30px" data-toggle="modal"
+                            data-target="#addModal2">添加
+                    </button>
                 </h4>
             </div>
 
@@ -73,12 +76,14 @@
                     <a href="{% url 'home' %}">
                     <span style="padding-left:35px; color: #f25c5c;">全部 <span
                             style="font-size: 16px; color: #9B9B9B;">( {{ total_amount }} )</span></span> </a>
-                    <a href="{% url 'search_category' 1 %}">
-                <span style="padding-left:35px; color: #9B9B9B;">男装 <span
-                        style="font-size: 16px; color:#9B9B9B;">( {{ men_clothing_amount }} )</span></span></a>
-                    <a href="{% url 'search_category' 2 %}">
-                    <span style="padding-left:35px; color: #9B9B9B;">女装 <span
-                            style="font-size: 16px; color: #9B9B9B;">( {{ women_clothing_amount }} )</span></span></a>
+                    {% for p in product_category %}
+                        <a href="{% url 'search_category' p.id %}">
+                        <span style="padding-left:35px; color: #9B9B9B;">{{ p.name }}<span
+                                style="font-size: 16px; color: #9B9B9B;">( {{ p.editedvideo_set.count }} )</span></span></a>
+                    {% endfor %}
+                    <button class="btn btn-default" style="margin-left: 30px" data-toggle="modal"
+                            data-target="#addModal3">添加
+                    </button>
                 </h4>
             </div>
         </div>
@@ -161,4 +166,86 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="addModal1" tabindex="-1" role="dialog" aria-labelledby="addModalLabel1"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">添加视频载体字段</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{% url 'add_container' %}" method="post">
+                    {% csrf_token %}
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="container_name" id="container_name"
+                                   placeholder="字段名称">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">确定</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addModal2" tabindex="-1" role="dialog" aria-labelledby="addModalLabel2"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">添加业务场景字段</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{% url 'add_scenes' %}" method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="scenes_name" id="scenes_name"
+                                   placeholder="字段名称">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">确定</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addModal3" tabindex="-1" role="dialog" aria-labelledby="addModalLabel3"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">添加产品品类字段</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{% url 'add_product_category' %}" method="post">
+                    {% csrf_token %}
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="category_name" id="category_name"
+                                   placeholder="字段名称">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">确定</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </body>
+    </html>
 {% endblock contents %}

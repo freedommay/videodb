@@ -9,12 +9,13 @@ from moviepy.editor import VideoFileClip
 
 from videodb import settings
 from . import videoEdit
-from .models import EditedVideo, Clip
+from .models import EditedVideo, Clip, Container, Scenes, ProductCategory
 from .video import GeneratedEditedVideo
 from .shotelement import GeneratedShotElement
 
 
 def home(request):
+    """广告短视频数据库主页"""
     video_list = EditedVideo.objects.all().order_by('-id')
     videos = paginate(request, video_list)
     context = get_context(request)
@@ -22,8 +23,36 @@ def home(request):
     return render(request, 'videodatabase/home.html', context)
 
 
+def get_context(request):
+    """
+    视频载体 手机 1 电视 2 ...
+    业务场景  商品上新 1 促销 2 品牌宣传 3 ...
+    产品品类 男装 1 女装 2 ...
+    """
+    total_amount = EditedVideo.objects.all().count()
+    container = Container.objects.all()
+    scenes = Scenes.objects.all()
+    product_category = ProductCategory.objects.all()
+    context = {
+        'total_amount': total_amount,
+        'container': container,
+        'scenes': scenes,
+        'product_category': product_category
+    }
+    return context
+
+
 def upload(request):
-    return render(request, 'videodatabase/upload.html')
+    """上传视频页面"""
+    container = Container.objects.all()
+    scenes = Scenes.objects.all()
+    product_category = ProductCategory.objects.all()
+    context = {
+        'container': container,
+        'scenes': scenes,
+        'product_category': product_category
+    }
+    return render(request, 'videodatabase/upload.html', context)
 
 
 def analysis_video(request):
@@ -40,12 +69,15 @@ def get_video(request):
         editedvideo = videoEdit.videoAnalysis(file_path)
         editedvideo.url = file
         editedvideo.name = name
-        editedvideo.container = request.POST.get('select1')
-        editedvideo.scenes = request.POST.get('select2')
-        editedvideo.productCategory = request.POST.get('select3')
+        container_id = request.POST.get('select1')
+        editedvideo.container = Container.objects.get(id=container_id)
+        scenes_id = request.POST.get('select2')
+        editedvideo.scenes = Scenes.objects.get(id=scenes_id)
+        product_category_id = request.POST.get('select3')
+        editedvideo.productCategory = ProductCategory.objects.get(id=product_category_id)
         editedvideo.save()
         path = editedvideo.url.path
-        clip = VideoFileClip(path)
+        clip = VideoFileClip(path)  # 获取视频时长
         editedvideo.duration = clip.duration
         clip.reader.close()
         clip.audio.reader.close_proc()
@@ -54,37 +86,38 @@ def get_video(request):
 
 
 def paginate(request, list):
+    """视频分页功能"""
     paginator = Paginator(list, 5)
     page = request.GET.get('page')
     videos = paginator.get_page(page)
     return videos
 
 
-def get_context(request):
-    """
-    视频载体 手机 1 电视 2
-    业务场景  商品上新 1 促销 2 品牌宣传 3
-    产品品类 男装 1 女装 2
-    """
-    total_amount = EditedVideo.objects.all().count()
-    mobile_amount = EditedVideo.objects.filter(container=1).count()
-    television_amount = EditedVideo.objects.filter(container=2).count()
-    new_amount = EditedVideo.objects.filter(scenes=1).count()
-    promotion_amount = EditedVideo.objects.filter(scenes=2).count()
-    advertisement_amount = EditedVideo.objects.filter(scenes=3).count()
-    men_clothing_amount = EditedVideo.objects.filter(productCategory=1).count()
-    women_clothing_amount = EditedVideo.objects.filter(productCategory=2).count()
-    context = {
-        'total_amount': total_amount,
-        'mobile_amount': mobile_amount,
-        'television_amount': television_amount,
-        'new_amount': new_amount,
-        'promotion_amount': promotion_amount,
-        'advertisement_amount': advertisement_amount,
-        'men_clothing_amount': men_clothing_amount,
-        'women_clothing_amount': women_clothing_amount,
-    }
-    return context
+def add_container(request):
+    """管理员增添视频载体字段"""
+    if request.method == 'POST':
+        name = request.POST.get('container_name')
+        container = Container(name=name)
+        container.save()
+        return HttpResponseRedirect(reverse('home'))
+
+
+def add_scenes(request):
+    """管理员增添业务场景字段"""
+    if request.method == 'POST':
+        name = request.POST.get('scenes_name')
+        scenes = Scenes(name=name)
+        scenes.save()
+        return HttpResponseRedirect(reverse('home'))
+
+
+def add_product_category(request):
+    """管理员增添产品品类字段"""
+    if request.method == 'POST':
+        name = request.POST.get('category_name')
+        product_category = ProductCategory(name=name)
+        product_category.save()
+        return HttpResponseRedirect(reverse('home'))
 
 
 def detail(request, video_id):
@@ -165,34 +198,33 @@ def detail(request, video_id):
 
 
 def search(request):
+    """在搜索框搜索视频"""
     global search_list
     condition = request.GET.get("video")
     if condition == '':
         return render(request, 'videodatabase/home.html')
-    elif condition == "手机":
-        search_list = EditedVideo.objects.filter(container=1).order_by('-id')
-    elif condition == "电视":
-        search_list = EditedVideo.objects.filter(container=2).order_by('-id')
-    elif condition == "商品上新":
-        search_list = EditedVideo.objects.filter(scenes=1).order_by('-id')
-    elif condition == "促销":
-        search_list = EditedVideo.objects.filter(scenes=2).order_by('-id')
-    elif condition == "品牌宣传":
-        search_list = EditedVideo.objects.filter(scenes=3).order_by('-id')
-    elif condition == "男装":
-        search_list = EditedVideo.objects.filter(productCategory=1).order_by('-id')
-    elif condition == "女装":
-        search_list = EditedVideo.objects.filter(productCategory=2).order_by('-id')
+    search_list = None
+    while True:
+        search_list = EditedVideo.objects.filter(container__name=condition).order_by('-id')
+        if search_list.count() > 0:
+            break
+        search_list = EditedVideo.objects.filter(scenes__name=condition).order_by('-id')
+        if search_list.count() > 0:
+            break
+        search_list = EditedVideo.objects.filter(productCategory__name=condition).order_by('-id')
+        break
+    if search_list is not None:
+        search_videos = paginate(request, search_list)
+        context = get_context(request)
+        context['videos'] = search_videos
+        return render(request, 'videodatabase/home.html', context)
     else:
         return render(request, 'videodatabase/home.html')
-    search_videos = paginate(request, search_list)
-    context = get_context(request)
-    context['videos'] = search_videos
-    return render(request, 'videodatabase/home.html', context)
 
 
 def search_container(request, container_id):
-    result = EditedVideo.objects.filter(container=container_id).order_by('-id')
+    """点击视频载体链接搜索视频"""
+    result = EditedVideo.objects.filter(container_id=container_id).order_by('-id')
     search_videos = paginate(request, result)
     context = get_context(request)
     context['videos'] = search_videos
@@ -200,6 +232,7 @@ def search_container(request, container_id):
 
 
 def search_scenes(request, scenes_id):
+    """点击业务场景链接搜索视频"""
     result = EditedVideo.objects.filter(scenes=scenes_id).order_by('-id')
     search_videos = paginate(request, result)
     context = get_context(request)
@@ -208,6 +241,7 @@ def search_scenes(request, scenes_id):
 
 
 def search_category(request, category_id):
+    """点击产品品类链接搜索视频"""
     result = EditedVideo.objects.filter(productCategory=category_id).order_by('-id')
     search_videos = paginate(request, result)
     context = get_context(request)
@@ -237,6 +271,7 @@ def save_clip(request):
 
 
 def auto_edit(request):
+    """上传素材页面"""
     clip_list = Clip.objects.all().order_by('-id')
     context = {
         'clips': clip_list
@@ -298,6 +333,7 @@ def download(request):
 
 
 def download_video(request):
+    """下载视频功能"""
     global filelist
     file_path = os.path.join(settings.BASE_DIR, 'media', 'generate', 'file.mp4')
     if os.path.exists(file_path):
@@ -311,4 +347,5 @@ def download_video(request):
 
 
 def contact(request):
+    """ '联系我们' 页面"""
     return render(request, 'videodatabase/contactUS.html')

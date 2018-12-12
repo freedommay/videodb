@@ -34,26 +34,19 @@
                                 <li>
                                     <span class="label label-default jelly">视频载体</span>
                                     <span class="fonts">
-                                {% if video.container == 1 %} 手机
-                                {% elif video.container == 2 %} 电视
-                                {% endif %}
+                                {{ video.container.name }}
                             </span>
                                 </li>
                                 <li>
                                     <span class="label label-default jelly">业务类型</span>
                                     <span class="fonts">
-                                {% if video.scenes == 1 %} 商品上新
-                                {% elif video.scenes == 2 %} 促销
-                                {% elif video.scenes == 3 %} 品牌宣传
-                                {% endif %}
+                                {{ video.scenes.name }}
                             </span>
                                 </li>
                                 <li>
                                     <span class="label label-default jelly">产品品类</span>
                                     <span class="fonts">
-                                {% if video.productCategory == 1 %} 男装
-                                {% elif video.productCategory == 2 %} 女装
-                                {% endif %}
+                                {{ video.productCategory.name }}
                             </span>
                                 </li>
                                 <li>
@@ -202,8 +195,17 @@
                     for (var item in timeList) {
                         numbers.push(timeList[item]);
                     }
-
                     option = {
+                        title: {
+                            subtext: "景别",
+                            left: "center",
+                            top: "top",
+                            padding: 30,
+                            subtextStyle: {
+                                fontSize: 14,
+                            },
+                        },
+
                         grid: {
                             y2: 20
                         },
@@ -285,6 +287,15 @@
                     var speedData = {{ speedData|safe }};
                     var property = "";
                     option = {
+                        title: {
+                            subtext: "主体运动强度",
+                            left: "center",
+                            top: "top",
+                            padding: 30,
+                            subtextStyle: {
+                                fontSize: 14,
+                            },
+                        },
                         grid: {
                             y2: 20
                         },
@@ -364,6 +375,15 @@
                     var timePositionList = {{ timePositionList|safe }};
                     var positionData = {{ positionData|safe }};
                     option = {
+                        title: {
+                            subtext: "主体位置",
+                            left: "center",
+                            top: "top",
+                            padding: 30,
+                            subtextStyle: {
+                                fontSize: 14,
+                            },
+                        },
                         grid: {
                             y2: 20
                         },
@@ -443,6 +463,15 @@
                     var timeColorList = {{ timeColorList|safe }};
                     var colorData = {{ colorData|safe }}
                         option = {
+                            title: {
+                                subtext: "色调",
+                                left: "center",
+                                top: "top",
+                                padding: 30,
+                                subtextStyle: {
+                                    fontSize: 14,
+                                },
+                            },
                             grid: {
                                 y2: 20
                             },
