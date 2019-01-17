@@ -75,7 +75,7 @@ WSGI_APPLICATION = 'videodb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'videodb',
+        'NAME': 'video',
         'USER': 'root',
         'PASSWORD': 'Admin123',
         'HOST': 'localhost',

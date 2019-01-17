@@ -1,9 +1,12 @@
+import uuid
+
 from django.db import models
 from jsonfield import JSONField
 
 
 def user_directory_path(instance, filename):
-    return 'video/{0}/{1}'.format(instance.name, filename)
+    folder = uuid.uuid4().hex[:10]
+    return 'video/{0}/{1}'.format(folder, filename)
 
 
 class Container(models.Model):
@@ -18,6 +21,10 @@ class ProductCategory(models.Model):
     name = models.CharField(max_length=50, verbose_name="产品品类")
 
 
+class Style(models.Model):
+    name = models.CharField(max_length=50, verbose_name="产品风格")
+
+
 class EditedVideo(models.Model):
     url = models.FileField(upload_to=user_directory_path, default="video")
     name = models.CharField(max_length=200, default="video")
@@ -29,6 +36,7 @@ class EditedVideo(models.Model):
     container = models.ForeignKey(Container, null=True, blank=True, on_delete=models.SET_NULL)
     scenes = models.ForeignKey(Scenes, null=True, blank=True, on_delete=models.SET_NULL)
     productCategory = models.ForeignKey(ProductCategory, null=True, blank=True, on_delete=models.SET_NULL)
+    style = models.ForeignKey(Style, null=True, blank=True, on_delete=models.SET_NULL)
     duration = models.IntegerField(default=0)
 
 

@@ -9,7 +9,7 @@ from moviepy.editor import VideoFileClip
 
 from videodb import settings
 from . import videoEdit
-from .models import EditedVideo, Clip, Container, Scenes, ProductCategory
+from .models import EditedVideo, Clip, Container, Scenes, ProductCategory, Style
 from .video import GeneratedEditedVideo
 from .shotelement import GeneratedShotElement
 
@@ -33,11 +33,13 @@ def get_context(request):
     container = Container.objects.all()
     scenes = Scenes.objects.all()
     product_category = ProductCategory.objects.all()
+    style = Style.objects.all()
     context = {
         'total_amount': total_amount,
         'container': container,
         'scenes': scenes,
-        'product_category': product_category
+        'product_category': product_category,
+        'style': style
     }
     return context
 
@@ -47,20 +49,24 @@ def upload(request):
     container = Container.objects.all()
     scenes = Scenes.objects.all()
     product_category = ProductCategory.objects.all()
+    style = Style.objects.all()
     context = {
         'container': container,
         'scenes': scenes,
-        'product_category': product_category
+        'product_category': product_category,
+        'style': style
     }
     return render(request, 'videodatabase/upload.html', context)
 
 
 def analysis_video(request):
+    """分析视频函数"""
     video = get_video(request)
     return HttpResponseRedirect(reverse('detail', args=(video.id,)))
 
 
 def get_video(request):
+    """获取上传的视频及标签"""
     if request.method == 'POST':
         name = request.FILES['video'].name
         name = name.split('.')[0]
@@ -75,6 +81,8 @@ def get_video(request):
         editedvideo.scenes = Scenes.objects.get(id=scenes_id)
         product_category_id = request.POST.get('select3')
         editedvideo.productCategory = ProductCategory.objects.get(id=product_category_id)
+        style_id = request.POST.get('select4')
+        editedvideo.style = Style.objects.get(id=style_id)
         editedvideo.save()
         path = editedvideo.url.path
         clip = VideoFileClip(path)  # 获取视频时长
@@ -117,6 +125,15 @@ def add_product_category(request):
         name = request.POST.get('category_name')
         product_category = ProductCategory(name=name)
         product_category.save()
+        return HttpResponseRedirect(reverse('home'))
+
+
+def add_style(request):
+    """管理员增添产品风格字段"""
+    if request.method == 'POST':
+        name = request.POST.get('style_name')
+        style = Style(name=name)
+        style.save()
         return HttpResponseRedirect(reverse('home'))
 
 
@@ -201,8 +218,6 @@ def search(request):
     """在搜索框搜索视频"""
     global search_list
     condition = request.GET.get("video")
-    if condition == '':
-        return render(request, 'videodatabase/home.html')
     search_list = None
     while True:
         search_list = EditedVideo.objects.filter(container__name=condition).order_by('-id')
@@ -212,6 +227,9 @@ def search(request):
         if search_list.count() > 0:
             break
         search_list = EditedVideo.objects.filter(productCategory__name=condition).order_by('-id')
+        if search_list.count() > 0:
+            break
+        search_list = EditedVideo.objects.filter(style__name=condition).order_by('-id')
         break
     if search_list is not None:
         search_videos = paginate(request, search_list)
@@ -243,6 +261,15 @@ def search_scenes(request, scenes_id):
 def search_category(request, category_id):
     """点击产品品类链接搜索视频"""
     result = EditedVideo.objects.filter(productCategory=category_id).order_by('-id')
+    search_videos = paginate(request, result)
+    context = get_context(request)
+    context['videos'] = search_videos
+    return render(request, 'videodatabase/home.html', context)
+
+
+def search_style(request, style_id):
+    """点击产品风格链接搜索视频"""
+    result = EditedVideo.objects.filter(style=style_id).order_by('-id')
     search_videos = paginate(request, result)
     context = get_context(request)
     context['videos'] = search_videos

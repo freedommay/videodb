@@ -86,6 +86,22 @@
                     </button>
                 </h4>
             </div>
+
+             <div class="container">
+                <h4 class="title_style" style="padding-left: 18px;padding-top: 10px;padding-bottom: 10px;color: #858484;">产品风格：
+                    <a href="{% url 'home' %}">
+                    <span style="padding-left:35px; color: #f25c5c;">全部 <span
+                            style="font-size: 16px; color: #9B9B9B;">( {{ total_amount }} )</span></span> </a>
+                    {% for s in style %}
+                        <a href="{% url 'search_style' s.id %}">
+                        <span style="padding-left:35px; color: #9B9B9B;">{{ s.name }}<span
+                                style="font-size: 16px; color: #9B9B9B;">( {{ s.editedvideo_set.count }} )</span></span></a>
+                    {% endfor %}
+                    <button class="btn btn-default" style="margin-left: 30px" data-toggle="modal"
+                            data-target="#addModal4">添加
+                    </button>
+                </h4>
+            </div>
         </div>
 
         <div class="container" style="padding-top: 30px;">
@@ -235,6 +251,33 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <input type="text" class="form-control" name="category_name" id="category_name"
+                                   placeholder="字段名称">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">确定</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addModal4" tabindex="-1" role="dialog" aria-labelledby="addModalLabel4"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">添加产品风格字段</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{% url 'add_style' %}" method="post">
+                    {% csrf_token %}
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="style_name" id="style_name"
                                    placeholder="字段名称">
                         </div>
                     </div>

@@ -113,6 +113,22 @@
                             </select>
                         </div>
                     </div>
+                </div><br>
+             <!-- 第四行 -->
+                <div class="row">
+                    <div class="col-xs-3">
+                        <h4 class="title">产品风格</h4>
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="form-group">
+
+                            <select class="form-control" id="exampleFormControlSelect4" name="select4">
+                                {% for s in style %}
+                                    <option value={{ s.id }}>{{ s.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
