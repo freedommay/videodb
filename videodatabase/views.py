@@ -86,8 +86,8 @@ def save_to_qiniu(file, file_name):
 
 
 def qiniu_upload_file(file, filename):
-    access_key = 'n3Mua5gMrHZKfx82ug-xtL9-kmbzPYTjpSvBVA2C'
-    secret_key = 'BDyebFk_OA-bsCdpmtFb9IaF5Zkc2U6wob_HIagX'
+    access_key = '***'
+    secret_key = '***'
     # 构建鉴权对象
     q = Auth(access_key, secret_key)
     # 存储空间名称
@@ -95,12 +95,11 @@ def qiniu_upload_file(file, filename):
     key = filename
     folder = uuid.uuid4().hex[:8]
     # 上传后保存的文件名，采用虚拟目录
-    # key = 'video/' + folder + '/' + key
     key = os.path.join('video', folder, key).replace("\\", "/")
     # 生成上传 Token
     token = q.upload_token(bucket_name, key, 3600)
     ret, info = put_file(token, key, file.temporary_file_path())
-    bucket_domain = 'pnigxm4gh.bkt.clouddn.com'
+    bucket_domain = '***'
     base_url = 'http://%s/%s' % (bucket_domain, key)  # 获取外链
     return base_url
 
@@ -332,14 +331,14 @@ def delete(request, clip_id):
 
 def save_clip_to_qiniu(file, filename, cookie):
     """保存素材到云存储空间"""
-    access_key = 'n3Mua5gMrHZKfx82ug-xtL9-kmbzPYTjpSvBVA2C'
-    secret_key = 'BDyebFk_OA-bsCdpmtFb9IaF5Zkc2U6wob_HIagX'
+    access_key = '***'
+    secret_key = '***'
     q = Auth(access_key, secret_key)
     bucket_name = 'media'
     key = os.path.join('clip', cookie, filename).replace("\\", "/")
     token = q.upload_token(bucket_name, key, 3600)
     ret, info = put_file(token, key, file.temporary_file_path())
-    bucket_domain = 'pnigxm4gh.bkt.clouddn.com'
+    bucket_domain = '***'
     base_url = 'http://%s/%s' % (bucket_domain, key)
     return base_url
 
