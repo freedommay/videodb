@@ -7,11 +7,6 @@
     <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script>
-        function add() {
-            window.location.href = '{% url 'add_container' %}';
-        }
-    </script>
 {% endblock style %}
 {% block contents %}
     <div class="container">
@@ -124,7 +119,7 @@
                            onmouseover='showname("{{ video.id }}")'>
                             <div class="videodiv" style="position: relative;">
                                 <video class="content" id='{{ video.id }}'>
-                                    <source id="videoss" src="{{ video.url.url }}" type="video/mp4">
+                                    <source id="videoss" src="{{ video.url }}" type="video/mp4">
                                 </video>
                             </div>
                             <div class="textdivs" name='{{ video.id }}'>

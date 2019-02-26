@@ -6,7 +6,6 @@
 
     {% endblock style %}
     <meta charset="utf-8">
-    <!-- 屏幕适配pc,移动端不缩放 -->
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title></title>
@@ -17,12 +16,10 @@
     <script type="text/javascript" src="{% static 'js/common.js' %}"></script>
 </head>
 <body>
-<!-- 导航栏-->
 {% block header %}
     <div class="navbar navbar-inverse navbar-static-top">
-        <div class="container"> <!-- 容器-->
-            <div class="navbar-header"><!-- 放logo和右边切换按钮-->
-                <!-- 小图标切换效果：-->
+        <div class="container">
+            <div class="navbar-header">
                 <button class="navbar-toggle" data-toggle="collapse" data-target="#use_menu">
                     <span class="icon-bar"> </span>
                     <span class="icon-bar"></span>
@@ -31,7 +28,7 @@
                 <a href="{% url 'home' %}" class="navbar-brand"><img src="{% static 'image/logo.png' %}" alt=""></a>
             </div>
             <div class="collapse navbar-collapse" id="use_menu">
-                <ul name="navs" class="nav navbar-nav hidden-sm navbar-right "><!-- 导航文字-->
+                <ul class="nav navbar-nav hidden-sm navbar-right ">
                     <li><a id="home" href="{% url 'home' %}">首页</a></li>
                     <li><a id="autoEdit" href="{% url 'autoEdit' %}">自动剪辑</a></li>
                     <li><a id="third" href="">打标平台</a></li>
@@ -47,8 +44,6 @@
 {% block foot %}
     <br><br><br><br><br><br><br><br>
     <br><br><br><br><br><br><br><br>
-
-    <!-- 脚注 -->
     <div class="container">
         <div class="row">
             <div class="col-xs-12"><p class="footnote">© 2018 by IDEA LAB</p></div>

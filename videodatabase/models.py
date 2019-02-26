@@ -1,12 +1,5 @@
-import uuid
-
 from django.db import models
 from jsonfield import JSONField
-
-
-def user_directory_path(instance, filename):
-    folder = uuid.uuid4().hex[:10]
-    return 'video/{0}/{1}'.format(folder, filename)
 
 
 class Container(models.Model):
@@ -26,7 +19,7 @@ class Style(models.Model):
 
 
 class EditedVideo(models.Model):
-    url = models.FileField(upload_to=user_directory_path, default="video")
+    url = models.CharField(max_length=200)
     name = models.CharField(max_length=200, default="video")
     jumpArg = models.IntegerField(default=0)
     speedArg = models.IntegerField(default=0)
@@ -53,5 +46,6 @@ class ShotElement(models.Model):
 
 
 class Clip(models.Model):
-    url = models.FileField(upload_to='raw', default="clip")
+    userId = models.CharField(max_length=200)
+    url = models.CharField(max_length=200)
     name = models.CharField(max_length=200, default="clip")

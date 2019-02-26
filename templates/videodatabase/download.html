@@ -11,10 +11,6 @@
         function back() {
             window.location.href = '{% url 'setting' %}';
         }
-
-        function download() {
-            window.location.href = '{% url 'download_video' %}';
-        }
     </script>
 {% endblock style %}
 
@@ -25,7 +21,6 @@
 
     <div class="container" style="text-align: center;">
         <video id="i1" width="573" height="320" controls autoplay>
-            {% load staticfiles %}
             <source src="/media/generate/{{ video }}" type="video/mp4">
         </video>
     </div>
@@ -39,9 +34,13 @@
             <div class="col-xs-6" style="padding-left:150px;">
                 <input type="button" class="btn-red" value="上一步" onClick="back()">
             </div>
-            <div class="col-xs-6" style="padding-right:150px;">
-                <input type="button" class="btn-red" value="下载视频" onClick="download()">
-            </div>
+            <form action="{% url 'download_video' %}" method="post">
+                {% csrf_token %}
+                <div class="col-xs-6" style="padding-right:150px;">
+                    <input type="hidden" name="video" value="{{ video }}">
+                    <input type="submit" class="btn-red" value="下载视频">
+                </div>
+            </form>
         </div>
     </div>
 {% endblock contents %}

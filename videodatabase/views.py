@@ -1,11 +1,13 @@
 import json
 import os
+import uuid
 
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from moviepy.editor import VideoFileClip
+from qiniu import Auth, put_file
 
 from videodb import settings
 from . import videoEdit
@@ -28,6 +30,7 @@ def get_context(request):
     视频载体 手机 1 电视 2 ...
     业务场景  商品上新 1 促销 2 品牌宣传 3 ...
     产品品类 男装 1 女装 2 ...
+    风格
     """
     total_amount = EditedVideo.objects.all().count()
     container = Container.objects.all()
@@ -65,27 +68,71 @@ def analysis_video(request):
     return HttpResponseRedirect(reverse('detail', args=(video.id,)))
 
 
+def save_to_local(file, file_name):
+    """上传视频到本地服务器目录"""
+    folder = uuid.uuid4().hex[:8]
+    path = os.path.join(settings.MEDIA_ROOT, 'video', folder).replace("\\", "/")
+    if not os.path.exists(path):
+        os.makedirs(path)
+    with open(os.path.join(path, file_name), "wb+") as f:
+        for chunk in file.chunks():
+            f.write(chunk)
+    return 'video/%s/%s' % (folder, file_name)
+
+
+def save_to_qiniu(file, file_name):
+    """上传视频到七牛云存储空间"""
+    return qiniu_upload_file(file, file_name)
+
+
+def qiniu_upload_file(file, filename):
+    access_key = 'n3Mua5gMrHZKfx82ug-xtL9-kmbzPYTjpSvBVA2C'
+    secret_key = 'BDyebFk_OA-bsCdpmtFb9IaF5Zkc2U6wob_HIagX'
+    # 构建鉴权对象
+    q = Auth(access_key, secret_key)
+    # 存储空间名称
+    bucket_name = 'media'
+    key = filename
+    folder = uuid.uuid4().hex[:8]
+    # 上传后保存的文件名，采用虚拟目录
+    # key = 'video/' + folder + '/' + key
+    key = os.path.join('video', folder, key).replace("\\", "/")
+    # 生成上传 Token
+    token = q.upload_token(bucket_name, key, 3600)
+    ret, info = put_file(token, key, file.temporary_file_path())
+    bucket_domain = 'pnigxm4gh.bkt.clouddn.com'
+    base_url = 'http://%s/%s' % (bucket_domain, key)  # 获取外链
+    return base_url
+
+
 def get_video(request):
     """获取上传的视频及标签"""
     if request.method == 'POST':
-        name = request.FILES['video'].name
-        name = name.split('.')[0]
         file = request.FILES.get('video')
-        file_path = file.temporary_file_path()
-        editedvideo = videoEdit.videoAnalysis(file_path)
-        editedvideo.url = file
-        editedvideo.name = name
+        name = file.name
+        show_name = ""
+        if name.find('.') > 0:
+            show_name = name.split('.')[0]
+        # url = save_to_local(file, name)
+        url = save_to_qiniu(file, name)
+        # editedvideo = videoEdit.videoAnalysis(os.path.join(settings.MEDIA_ROOT, url))
+        editedvideo = videoEdit.videoAnalysis(url)
+        editedvideo.url = url
+        editedvideo.name = show_name
         container_id = request.POST.get('select1')
-        editedvideo.container = Container.objects.get(id=container_id)
+        if int(container_id) != 0:
+            editedvideo.container = Container.objects.get(id=container_id)
         scenes_id = request.POST.get('select2')
-        editedvideo.scenes = Scenes.objects.get(id=scenes_id)
+        if int(scenes_id) != 0:
+            editedvideo.scenes = Scenes.objects.get(id=scenes_id)
         product_category_id = request.POST.get('select3')
-        editedvideo.productCategory = ProductCategory.objects.get(id=product_category_id)
+        if int(product_category_id) != 0:
+            editedvideo.productCategory = ProductCategory.objects.get(id=product_category_id)
         style_id = request.POST.get('select4')
-        editedvideo.style = Style.objects.get(id=style_id)
-        editedvideo.save()
-        path = editedvideo.url.path
-        clip = VideoFileClip(path)  # 获取视频时长
+        if int(style_id) != 0:
+            editedvideo.style = Style.objects.get(id=style_id)
+        # clip = VideoFileClip(os.path.join(settings.MEDIA_ROOT, url))
+        clip = VideoFileClip(url)  # 获取视频时长
         editedvideo.duration = clip.duration
         clip.reader.close()
         clip.audio.reader.close_proc()
@@ -95,7 +142,7 @@ def get_video(request):
 
 def paginate(request, list):
     """视频分页功能"""
-    paginator = Paginator(list, 5)
+    paginator = Paginator(list, 8)
     page = request.GET.get('page')
     videos = paginator.get_page(page)
     return videos
@@ -242,7 +289,7 @@ def search(request):
 
 def search_container(request, container_id):
     """点击视频载体链接搜索视频"""
-    result = EditedVideo.objects.filter(container_id=container_id).order_by('-id')
+    result = EditedVideo.objects.filter(container=container_id).order_by('-id')
     search_videos = paginate(request, result)
     context = get_context(request)
     context['videos'] = search_videos
@@ -277,29 +324,44 @@ def search_style(request, style_id):
 
 
 def delete(request, clip_id):
+    """素材删除"""
     clip = get_object_or_404(Clip, pk=clip_id)
     clip.delete()
     return HttpResponseRedirect(reverse('autoEdit'))
 
 
-filelist = []
+def save_clip_to_qiniu(file, filename, cookie):
+    """保存素材到云存储空间"""
+    access_key = 'n3Mua5gMrHZKfx82ug-xtL9-kmbzPYTjpSvBVA2C'
+    secret_key = 'BDyebFk_OA-bsCdpmtFb9IaF5Zkc2U6wob_HIagX'
+    q = Auth(access_key, secret_key)
+    bucket_name = 'media'
+    key = os.path.join('clip', cookie, filename).replace("\\", "/")
+    token = q.upload_token(bucket_name, key, 3600)
+    ret, info = put_file(token, key, file.temporary_file_path())
+    bucket_domain = 'pnigxm4gh.bkt.clouddn.com'
+    base_url = 'http://%s/%s' % (bucket_domain, key)
+    return base_url
 
 
 def save_clip(request):
+    """上传素材"""
     if request.method == 'POST':
-        name = request.FILES['file'].name
-        name = name.split('.')[0]
+        cookie = request.COOKIES['csrftoken']
         file = request.FILES.get('file')
+        name = file.name
         clip = Clip(name=name)
-        clip.url = file
+        clip.userId = cookie
+        url = save_clip_to_qiniu(file, name, cookie)
+        clip.url = url
         clip.save()
-        filelist.append(clip.url.path)
         return HttpResponseRedirect(reverse('autoEdit'))
 
 
 def auto_edit(request):
     """上传素材页面"""
-    clip_list = Clip.objects.all().order_by('-id')
+    cookie = request.COOKIES['csrftoken']
+    clip_list = Clip.objects.filter(userId=cookie).order_by('-id')
     context = {
         'clips': clip_list
     }
@@ -307,6 +369,7 @@ def auto_edit(request):
 
 
 def setting(request):
+    """设置参数页面"""
     return render(request, "videodatabase/setting.html")
 
 
@@ -327,7 +390,6 @@ def download(request):
         ----时间线----
         整体 部分 细节
     """
-    global filelist
     if request.method == "POST":
         speedArg = int(request.POST.get("speedArg_options"))
         positionArg = int(request.POST.get("positionArg_options"))
@@ -348,24 +410,25 @@ def download(request):
         timeTemplete.append('%.2f' % (split2 / 100.0 - split1 / 100.0))
         timeTemplete.append('%.2f' % (1.0 - split2 / 100.0))
         filelist = []
-        for clip in Clip.objects.all():
-            filelist.append(clip.url.path)
+        cookie = request.COOKIES['csrftoken']
+        for clip in Clip.objects.filter(userId=cookie):
+            filelist.append(clip.url)
         video = videoEdit.VideoMerge(filelist, timeTemplete, editedVideo)
         context = {
             'video': video
         }
         return render(request, "videodatabase/download.html", context)
     else:
-        return render(request, "videodatabase/download.html")
+        raise Http404
 
 
 def download_video(request):
     """下载视频功能"""
-    global filelist
-    file_path = os.path.join(settings.BASE_DIR, 'media', 'generate', 'file.mp4')
+    name = request.POST.get('video')
+    file_path = os.path.join(settings.BASE_DIR, 'media', 'generate', name)
+    cookie = request.COOKIES['csrftoken']
     if os.path.exists(file_path):
-        filelist = []
-        Clip.objects.all().delete()
+        Clip.objects.all().filter(userId=cookie).delete()
         with open(file_path, 'rb') as fh:
             response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
             response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)

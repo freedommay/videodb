@@ -60,18 +60,17 @@
                 </form>
                 {% for clip in clips %}
                     <div class="col-md-4 col-sm-4 col-xs-4">
-                        <a class="aa" href="{% url 'delete' clip.id %}" onmouseout='closename("{{ clip.id }}")'
+                        <a class="aa" href="{% url 'delete' clip.id %}"
+                           onmouseout='closename("{{ clip.id }}")'
                            onmouseover='showname("{{ clip.id }}")'>
                             <div class="videodiv" style="position: relative;">
                                 <video class="content" id='{{ clip.id }}' width="300" height="200"
                                        style="padding-top:30px; ">
-                                    <source id="clipss" src="{{ clip.url.url }}" type="video/mp4">
+                                    <source id="clipss" src="{{ clip.url }}" type="video/mp4">
                                 </video>
                             </div>
 
-                            <div class="textdivs" name='{{ clip.id }}'>
-                                删除
-                            </div>
+                            <div class="textdivs" name='{{ clip.id }}'>删除</div>
                         </a>
                         <div class="row">
                             <div class="col-md-6 span7 text-center">
