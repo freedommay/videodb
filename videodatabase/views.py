@@ -8,17 +8,26 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from moviepy.editor import VideoFileClip
 from qiniu import Auth, put_file
+from elasticsearch import Elasticsearch
 
 from videodb import settings
 from . import videoEdit
-from .models import EditedVideo, Clip, Container, Scenes, ProductCategory, Style
+from videodatabase.videoEdit import conn_redis
+from .models import EditedVideo, Clip, Container, Scene, ProductCategory, Style
 from .video import GeneratedEditedVideo
 from .shotelement import GeneratedShotElement
 
 
 def home(request):
     """广告短视频数据库主页"""
-    video_list = EditedVideo.objects.all().order_by('-id')
+    video_number = EditedVideo.objects.count()
+    video_list = EditedVideo.objects.all()
+    if video_number > 0:
+        conn = conn_redis()
+        order = conn.zrevrange('video_score', 0, -1)
+        video_rank_id = [int(vid) for vid in order]
+        video_list = list(video_list)
+        video_list.sort(key=lambda x: video_rank_id.index(x.id))
     videos = paginate(request, video_list)
     context = get_context(request)
     context['videos'] = videos
@@ -33,31 +42,31 @@ def get_context(request):
     风格
     """
     total_amount = EditedVideo.objects.all().count()
-    container = Container.objects.all()
-    scenes = Scenes.objects.all()
-    product_category = ProductCategory.objects.all()
-    style = Style.objects.all()
+    containers = Container.objects.all()
+    scenes = Scene.objects.all()
+    product_categories = ProductCategory.objects.all()
+    styles = Style.objects.all()
     context = {
         'total_amount': total_amount,
-        'container': container,
+        'containers': containers,
         'scenes': scenes,
-        'product_category': product_category,
-        'style': style
+        'product_categories': product_categories,
+        'styles': styles
     }
     return context
 
 
 def upload(request):
     """上传视频页面"""
-    container = Container.objects.all()
-    scenes = Scenes.objects.all()
-    product_category = ProductCategory.objects.all()
-    style = Style.objects.all()
+    containers = Container.objects.all()
+    scenes = Scene.objects.all()
+    product_categories = ProductCategory.objects.all()
+    styles = Style.objects.all()
     context = {
-        'container': container,
+        'containers': containers,
         'scenes': scenes,
-        'product_category': product_category,
-        'style': style
+        'product_categories': product_categories,
+        'styles': styles
     }
     return render(request, 'videodatabase/upload.html', context)
 
@@ -115,15 +124,18 @@ def get_video(request):
         # url = save_to_local(file, name)
         url = save_to_qiniu(file, name)
         # editedvideo = videoEdit.videoAnalysis(os.path.join(settings.MEDIA_ROOT, url))
+
+        # result = videoEdit.videoAnalysis.delay(url) # 尝试一下消息队列
+        # editedvideo = result.get()
         editedvideo = videoEdit.videoAnalysis(url)
         editedvideo.url = url
         editedvideo.name = show_name
         container_id = request.POST.get('select1')
         if int(container_id) != 0:
             editedvideo.container = Container.objects.get(id=container_id)
-        scenes_id = request.POST.get('select2')
-        if int(scenes_id) != 0:
-            editedvideo.scenes = Scenes.objects.get(id=scenes_id)
+        scene_id = request.POST.get('select2')
+        if int(scene_id) != 0:
+            editedvideo.scene = Scene.objects.get(id=scene_id)
         product_category_id = request.POST.get('select3')
         if int(product_category_id) != 0:
             editedvideo.productCategory = ProductCategory.objects.get(id=product_category_id)
@@ -136,6 +148,14 @@ def get_video(request):
         clip.reader.close()
         clip.audio.reader.close_proc()
         editedvideo.save()
+        # 将数据插入ElasticSearch
+        container_name = '0' if editedvideo.container is None else editedvideo.container.name
+        scene_name = '0' if editedvideo.scene is None else editedvideo.scene.name
+        category_name = '0' if editedvideo.productCategory is None else editedvideo.productCategory.name
+        style_name = '0' if editedvideo.style is None else editedvideo.style.name
+        result = insert_to_es(editedvideo.id, editedvideo.name, container_name, scene_name,
+                              category_name, style_name)
+        print(result)
         return editedvideo
 
 
@@ -156,12 +176,12 @@ def add_container(request):
         return HttpResponseRedirect(reverse('home'))
 
 
-def add_scenes(request):
+def add_scene(request):
     """管理员增添业务场景字段"""
     if request.method == 'POST':
-        name = request.POST.get('scenes_name')
-        scenes = Scenes(name=name)
-        scenes.save()
+        name = request.POST.get('scene_name')
+        scene = Scene(name=name)
+        scene.save()
         return HttpResponseRedirect(reverse('home'))
 
 
@@ -199,6 +219,8 @@ def detail(request, video_id):
     是否跳剪 否 0 是 1
     """
     video = get_object_or_404(EditedVideo, pk=video_id)
+    conn = conn_redis()
+    conn.zincrby('video_score', video_id, 432)  # 每次访问该页面为视频增加一定的分值
     shotQuerySet = video.shotelement_set.all()
     value = shotQuerySet.count()
     start_shot = video.shotelement_set.filter(editedVideo=video).first()
@@ -260,6 +282,71 @@ def detail(request, video_id):
     return render(request, 'videodatabase/detail.html', context)
 
 
+def init_es():
+    es = Elasticsearch()
+    es.indices.create(index='video', ignore=400)
+    return es
+
+
+def insert_to_es(id, name, container, scene, category, style):
+    data = {
+        'name': name,
+        'container': container,
+        'scene': scene,
+        'category': category,
+        'style': style
+    }
+    es = init_es()
+    result = es.create(index='video', doc_type='label', id=id, body=data)
+    return result
+
+
+def search_by_es(request):
+    condition = request.GET.get("video")
+    mapping = {
+        'properties': {
+            'title': {
+                'type': 'text',
+                'analyzer': 'ik_max_word',
+                'search_analyzer': 'ik_max_word'
+            }
+        }
+    }  # 采用中文分词器
+    es = init_es()
+    es.indices.put_mapping(index='video', doc_type='label', body=mapping)
+    dsl = {
+        "query": {
+            # 'match': {
+            #     'name': condition,
+            #     'container': condition,
+            #     'scene': condition,
+            #     'category': condition,
+            #     'style': condition
+
+            "bool": {
+                "should": {
+                    "multi_match": {
+                        "operator": "or",
+                        "query": condition,
+                        "fields": ["name", "container", "scene", "category", "style"]
+                    }
+                }
+            }
+        }
+    }
+
+    result = es.search(index='video', doc_type='label', body=dsl)
+
+    search_list = []
+
+    for hit in result['hits']['hits']:
+        search_list.append(int(hit['_id']))
+    videos = EditedVideo.objects.filter(pk__in=search_list)
+    context = get_context(request)
+    context['videos'] = videos
+    return render(request, 'videodatabase/home.html', context)
+
+
 def search(request):
     """在搜索框搜索视频"""
     global search_list
@@ -269,7 +356,7 @@ def search(request):
         search_list = EditedVideo.objects.filter(container__name=condition).order_by('-id')
         if search_list.count() > 0:
             break
-        search_list = EditedVideo.objects.filter(scenes__name=condition).order_by('-id')
+        search_list = EditedVideo.objects.filter(scene__name=condition).order_by('-id')
         if search_list.count() > 0:
             break
         search_list = EditedVideo.objects.filter(productCategory__name=condition).order_by('-id')
@@ -295,9 +382,9 @@ def search_container(request, container_id):
     return render(request, 'videodatabase/home.html', context)
 
 
-def search_scenes(request, scenes_id):
+def search_scene(request, scene_id):
     """点击业务场景链接搜索视频"""
-    result = EditedVideo.objects.filter(scenes=scenes_id).order_by('-id')
+    result = EditedVideo.objects.filter(scene=scene_id).order_by('-id')
     search_videos = paginate(request, result)
     context = get_context(request)
     context['videos'] = search_videos
@@ -346,7 +433,7 @@ def save_clip_to_qiniu(file, filename, cookie):
 def save_clip(request):
     """上传素材"""
     if request.method == 'POST':
-        cookie = request.COOKIES['csrftoken']
+        cookie = request.COOKIES['csrftoken']  # 在cookie中获取csrftoken，作为用户标识
         file = request.FILES.get('file')
         name = file.name
         clip = Clip(name=name)

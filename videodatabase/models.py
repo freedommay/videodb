@@ -3,19 +3,19 @@ from jsonfield import JSONField
 
 
 class Container(models.Model):
-    name = models.CharField(max_length=50, verbose_name="视频载体")
+    name = models.CharField(max_length=50, verbose_name="视频载体", default='0')
 
 
-class Scenes(models.Model):
-    name = models.CharField(max_length=50, verbose_name="业务场景")
+class Scene(models.Model):
+    name = models.CharField(max_length=50, verbose_name="业务场景", default='0')
 
 
 class ProductCategory(models.Model):
-    name = models.CharField(max_length=50, verbose_name="产品品类")
+    name = models.CharField(max_length=50, verbose_name="产品品类", default='0')
 
 
 class Style(models.Model):
-    name = models.CharField(max_length=50, verbose_name="产品风格")
+    name = models.CharField(max_length=50, verbose_name="产品风格", default='0')
 
 
 class EditedVideo(models.Model):
@@ -27,7 +27,7 @@ class EditedVideo(models.Model):
     cramArg = models.IntegerField(default=0)
     colorArg = models.IntegerField(default=0)
     container = models.ForeignKey(Container, null=True, blank=True, on_delete=models.SET_NULL)
-    scenes = models.ForeignKey(Scenes, null=True, blank=True, on_delete=models.SET_NULL)
+    scene = models.ForeignKey(Scene, null=True, blank=True, on_delete=models.SET_NULL)
     productCategory = models.ForeignKey(ProductCategory, null=True, blank=True, on_delete=models.SET_NULL)
     style = models.ForeignKey(Style, null=True, blank=True, on_delete=models.SET_NULL)
     duration = models.IntegerField(default=0)

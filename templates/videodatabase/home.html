@@ -18,7 +18,7 @@
     <div class="container">
         <div col-lg-12></div>
         <div class="col-lg-3 col-xs-3"></div>
-        <form action="{% url 'search' %}">
+        <form action="{% url 'search_by_es' %}">
             <div class="input-group col-lg-6 col-md-6 col-sm-6">
                 <input type="text" name="video" class="form-control" placeholder="请输入要查询的视频类型"/>
                 <span class="input-group-btn">
@@ -38,14 +38,16 @@
                             style="padding-left:35px; color: #f25c5c;">全部 <span
                             style="font-size: 16px; color: #9B9B9B;">( {{ total_amount }} )</span></span>
                     </a>
-                    {% for c in container %}
+                    {% for c in containers %}
                         <a href="{% url 'search_container' c.id %}">
                         <span style="padding-left:35px; color: #9B9B9B;">{{ c.name }}<span
                                 style="font-size: 16px; color: #9B9B9B;">( {{ c.editedvideo_set.count }} )</span></span></a>
                     {% endfor %}
+                <!--
                     <button class="btn btn-default" style="margin-left: 30px" data-toggle="modal"
                             data-target="#addModal1">添加
                     </button>
+                 -->
                 </h4>
             </div>
 
@@ -55,13 +57,15 @@
                     <span style="padding-left:35px; color: #f25c5c;">全部 <span
                             style="font-size: 16px; color: #9B9B9B;">( {{ total_amount }} )</span></span></a>
                     {% for s in scenes %}
-                        <a href="{% url 'search_scenes' s.id %}">
+                        <a href="{% url 'search_scene' s.id %}">
                         <span style="padding-left:35px; color: #9B9B9B;">{{ s.name }}<span
                                 style="font-size: 16px; color: #9B9B9B;">( {{ s.editedvideo_set.count }} )</span></span></a>
                     {% endfor %}
+                <!--
                     <button class="btn btn-default" style="margin-left: 30px" data-toggle="modal"
                             data-target="#addModal2">添加
                     </button>
+                -->
                 </h4>
             </div>
 
@@ -71,14 +75,16 @@
                     <a href="{% url 'home' %}">
                     <span style="padding-left:35px; color: #f25c5c;">全部 <span
                             style="font-size: 16px; color: #9B9B9B;">( {{ total_amount }} )</span></span> </a>
-                    {% for p in product_category %}
+                    {% for p in product_categories %}
                         <a href="{% url 'search_category' p.id %}">
                         <span style="padding-left:35px; color: #9B9B9B;">{{ p.name }}<span
                                 style="font-size: 16px; color: #9B9B9B;">( {{ p.editedvideo_set.count }} )</span></span></a>
                     {% endfor %}
+                <!--
                     <button class="btn btn-default" style="margin-left: 30px" data-toggle="modal"
                             data-target="#addModal3">添加
                     </button>
+                -->
                 </h4>
             </div>
 
@@ -87,14 +93,16 @@
                     <a href="{% url 'home' %}">
                     <span style="padding-left:35px; color: #f25c5c;">全部 <span
                             style="font-size: 16px; color: #9B9B9B;">( {{ total_amount }} )</span></span> </a>
-                    {% for s in style %}
+                    {% for s in styles %}
                         <a href="{% url 'search_style' s.id %}">
                         <span style="padding-left:35px; color: #9B9B9B;">{{ s.name }}<span
                                 style="font-size: 16px; color: #9B9B9B;">( {{ s.editedvideo_set.count }} )</span></span></a>
                     {% endfor %}
+                <!--
                     <button class="btn btn-default" style="margin-left: 30px" data-toggle="modal"
                             data-target="#addModal4">添加
                     </button>
+                -->
                 </h4>
             </div>
         </div>
@@ -177,6 +185,7 @@
             </div>
         </div>
     </div>
+    <!-- 通过后台管理员系统进行标签的添加
     <div class="modal fade" id="addModal1" tabindex="-1" role="dialog" aria-labelledby="addModalLabel1"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -214,11 +223,11 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{% url 'add_scenes' %}" method="post">
+                <form action="{% url 'add_scene' %}" method="post">
                     {% csrf_token %}
                     <div class="modal-body">
                         <div class="form-group">
-                            <input type="text" class="form-control" name="scenes_name" id="scenes_name"
+                            <input type="text" class="form-control" name="scene_name" id="scene_name"
                                    placeholder="字段名称">
                         </div>
                     </div>
@@ -284,6 +293,7 @@
             </div>
         </div>
     </div>
+    -->
     </body>
     </html>
 {% endblock contents %}

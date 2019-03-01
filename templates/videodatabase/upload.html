@@ -75,7 +75,7 @@
                         <div class="form-group">
                             <select class="form-control" id="exampleFormControlSelect1" name="select1">
                                 <option value="0"></option>
-                                {% for c in container %}
+                                {% for c in containers %}
                                     <option value={{ c.id }}>{{ c.name }}</option>
                                 {% endfor %}
                             </select>
@@ -110,7 +110,7 @@
 
                             <select class="form-control" id="exampleFormControlSelect1" name="select3">
                                 <option value="0"></option>
-                                {% for p in product_category %}
+                                {% for p in product_categories %}
                                     <option value={{ p.id }}>{{ p.name }}</option>
                                 {% endfor %}
                             </select>
@@ -127,7 +127,7 @@
                         <div class="form-group">
                             <select class="form-control" id="exampleFormControlSelect4" name="select4">
                                 <option value="0"></option>
-                                {% for s in style %}
+                                {% for s in styles %}
                                     <option value={{ s.id }}>{{ s.name }}</option>
                                 {% endfor %}
                             </select>
